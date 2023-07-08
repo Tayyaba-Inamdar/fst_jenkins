@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+   /* agent { 
+    label 'Jenkins-win'
+    }*/
+    
+    stages {
+        stage("Clone Git Repository") {
+            steps {
+                git(
+                    url: "https://github.com/Tayyaba-Inamdar/fst_jenkins.git",
+                    branch: "main",
+                    changelog: true,
+                    poll: true
+                )
+            }
+        }
+        stage("Run artifacts") {
+            steps {
+            bat '''javac HelloWorld.java
+                 java HelloWorld'''
+             
+            }
+        }
+        
+        stage("LOOP") {
+            options {timeout(time: 2, unit: 'MINUTES') }
+            steps {
+           sleep(time:5,unit:"MINUTES")
+             
+            }
+        }
+        // stage("Push to Git Repository") {
+        //     steps {
+        //         withCredentials([gitUsernamePassword(credentialsId: 'git-devsecops-token', gitToolName: 'Default')]) {
+        //             bat "git push -u origin main"
+        //         }
+        //     }
+        // }
+    }
+    // post {
+    //     always {
+    //         deleteDir()
+    //     }
+    // }
+}
